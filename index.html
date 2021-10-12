@@ -23,16 +23,15 @@
     <div class="flex flex-col w-full h-full sm:flex-row">
 
       <!--      sidebar-->
-      <div class="flex flex-col p-2 w-64 bg-gray-600">
-        <!--        buttons-->
-        <div class="flex flex-col justify-center mb-4 space-y-4">
-          <a href="#" class="flex justify-center items-center px-4 py-2 bg-blue-500">Save Image</a>
-          <a href="#" class="flex justify-center items-center px-4 py-2 bg-green-500">New Image</a>
-        </div>
+      <div class="order-2 sm:order-1 flex flex-col p-2  w-full sm:w-64 bg-gray-600">
+
 
         <!--        image details-->
         <div class="flex flex-col space-y-4 font-semibold text-gray-900 text-md">
-          <div class="flex items-center">
+          <div class="flex items-center mb-2">
+            <span class="font-semibold text-l ">Image Details:</span>
+          </div>
+          <div class="flex items-center mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd"
                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
@@ -40,7 +39,7 @@
             </svg>
             <span class="ml-2">john doe</span>
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center pb-4 mb-2 border-b border-gray-500 ">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
               <path
                 d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/>
@@ -48,13 +47,49 @@
             </svg>
             <a class="ml-2 text-indigo-900 hover:underline" href="#">View source image</a>
           </div>
-
+          <div class="flex items-center mb-4">
+            <span class="font-semibold text-lg">Saved 5 times </span>
+          </div>
+          <div class="flex items-center">
+            <ul class="text-blue-800 pl-2">
+              <li class="mb-2 hover:underline">
+                <a href="#">scott@mail.com</a>
+              </li>
+              <li class="mb-2 hover:underline">
+                <a href="#">alex@mail.com</a>
+              </li>
+              <li class="mb-2 hover:underline">
+                <a href="#">ben@mail.com</a>
+              </li>
+              <li class="mb-2 hover:underline">
+                <a href="#">stuart@mail.com</a>
+              </li>
+              <li class="mb-2 hover:underline">
+                <a href="#">bobby@mail.com</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <!--      image container-->
-      <main class="flex flex-1 justify-center items-center p-20 h-full bg-gray-200">
-        <img class="rounded-xl shadow-lg" src="https://picsum.photos/800/600" alt="">
+      <main class="order-1 sm:order-2 flex flex-col flex-1 justify-center items-center p-10 h-full bg-gray-200">
+        <!--        buttons-->
+        <div class="flex flex-col  mb-4  font-semibold">
+          <div class="flex mb-5">
+            <a href="#"
+               class="flex rounded justify-center items-center w-32 px-4 py-2 bg-blue-500 hover:bg-blue-600 mr-5">Save
+              Image
+            </a>
+            <a href="#"
+               class="flex rounded justify-center items-center w-32 px-4 py-2 bg-green-500 hover:bg-green-600">New
+              Image
+            </a>
+          </div>
+
+
+         <img class="rounded-xl shadow-lg" src="https://picsum.photos/800/600" alt="">
+        </div>
       </main>
     </div>
 
