@@ -18,12 +18,12 @@ function styles() {
     .pipe(postcss([
       require('tailwindcss'),
       require('autoprefixer'),
-      require('@fullhuman/postcss-purgecss')({
-        content: [
-          './index.html'
-        ],
-        defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
-      }),
+      // require('@fullhuman/postcss-purgecss')({
+      //   content: [
+      //     './index.html'
+      //   ],
+      //   defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
+      // }),
 
     ]))
     .pipe(gulp.dest(paths.styles.dest))

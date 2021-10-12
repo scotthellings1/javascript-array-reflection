@@ -22,9 +22,7 @@
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-postcss": "^9.0.1",
-    "tailwindcss": "^1.9.6"
-  },
-  "dependencies": {
+    "tailwindcss": "^1.9.6",
     "@fullhuman/postcss-purgecss": "^2.3.0",
     "autoprefixer": "^9.8.8"
   }
