@@ -1,10 +1,10 @@
 const gulp = require('gulp')
-const sass = require('gulp-sass')(require('sass'))
+const postcss = require('gulp-postcss')
 const babel = require('gulp-babel')
 
 const  paths = {
   styles: {
-    src: './src/scss/**/*.scss',
+    src: './src/css/**/*.css',
     dest: './dist/css/'
   },
   scripts : {
@@ -15,9 +15,21 @@ const  paths = {
 
 function styles() {
   return gulp.src(paths.styles.src)
-    .pipe(sass().on('error', sass.logError))
+    .pipe(postcss([
+      require('tailwindcss'),
+      require('autoprefixer'),
+      require('@fullhuman/postcss-purgecss')({
+        content: [
+          './index.html'
+        ],
+        defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
+      }),
+
+    ]))
     .pipe(gulp.dest(paths.styles.dest))
 }
+
+
 
 function scripts() {
   return gulp.src(paths.scripts.src)
@@ -29,6 +41,7 @@ function scripts() {
 
 function watch() {
   gulp.watch(paths.styles.src, styles)
+  gulp.watch('./index.html', styles)
   gulp.watch(paths.scripts.src, scripts)
 }
 
@@ -36,7 +49,8 @@ function run() {
   return gulp.series( styles, scripts, watch)()
 }
 
-exports.styles = styles
+// exports.styles = styles
 exports.scripts = scripts
+exports.styles = styles
 exports.watch = watch
 exports.default = run
