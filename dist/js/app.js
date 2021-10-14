@@ -1,5 +1,3 @@
-"use strict";
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Photo = function Photo(id, author, url, download_url) {
@@ -24,7 +22,7 @@ var imgEl = document.querySelector('#newImage'); // new image button
 var imageContainer = document.querySelector('#imageContainer'); // div that should hold the image.
 
 var authorEl = document.querySelector('#author');
-var unsplashLinkEl = document.getElementById('unsplashLink'); // gets a list of images from a random page with a limit of 100 items per page
+var unsplashLinkEl = document.querySelector('#unsplashLink'); // gets a list of images from a random page with a limit of 100 items per page
 
 var getPhoto = function getPhoto() {
   var randomPage = Math.floor(Math.random() * 10 + 1);
@@ -59,8 +57,7 @@ var displayImage = function displayImage(image) {
 
 var PhotoAttributes = function PhotoAttributes(image) {
   authorEl.innerHTML = image.author;
-  var unsplashLinkEl2 = document.getElementById('unsplashLink');
-  unsplashLinkEl2.setAttribute('href', image.url);
+  unsplashLinkEl.setAttribute('href', image.url);
   console.log(image.url);
 }; // remove the last image from the dom
 
@@ -70,7 +67,7 @@ var removeLastPhoto = function removeLastPhoto() {
   imageContainer.removeChild(lastImage);
 };
 /*-----------------
-event listeners
+event listeners x
 -----------------*/
 //load the first image on page load
 

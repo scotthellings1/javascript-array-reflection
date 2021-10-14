@@ -1,3 +1,5 @@
+
+
 class Photo {
   constructor(id, author, url, download_url) {
     this.id = id
@@ -17,7 +19,7 @@ HTML Selectors
 const imgEl = document.querySelector('#newImage') // new image button
 const imageContainer = document.querySelector('#imageContainer') // div that should hold the image.
 const authorEl = document.querySelector('#author')
-  const unsplashLinkEl = document.getElementById('unsplashLink')
+const unsplashLinkEl = document.querySelector('#unsplashLink')
 
 
 
@@ -54,8 +56,7 @@ const displayImage = (image) => {
 
 const PhotoAttributes = (image) => {
   authorEl.innerHTML = image.author
-  let unsplashLinkEl2 = document.getElementById('unsplashLink')
-  unsplashLinkEl2.setAttribute('href',image.url)
+  unsplashLinkEl.setAttribute('href',image.url)
   console.log(image.url)
 }
 
@@ -66,7 +67,7 @@ const removeLastPhoto = () => {
 }
 
 /*-----------------
-event listeners
+event listeners x
 -----------------*/
 
 //load the first image on page load

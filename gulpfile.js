@@ -34,7 +34,7 @@ function styles() {
 function scripts() {
   return gulp.src(paths.scripts.src)
     .pipe(babel({
-      presets: ['@babel/preset-env']
+      presets: [['@babel/preset-env',{modules: false} ]]
     }))
     .pipe(gulp.dest(paths.scripts.dest))
 }
