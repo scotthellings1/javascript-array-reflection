@@ -21638,6 +21638,13 @@ video {
           animation: bounce 1s infinite;
 }
 
+img {
+  max-width: 100%;
+  flex-shrink: 0;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

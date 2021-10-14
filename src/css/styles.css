@@ -3,3 +3,9 @@
 @tailwind components;
 
 @tailwind utilities;
+
+img {
+	max-width: 100%;
+	flex-shrink: 0;
+	object-fit: contain;
+	}
