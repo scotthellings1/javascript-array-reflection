@@ -19,11 +19,12 @@
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
+    "@fullhuman/postcss-purgecss": "^2.3.0",
+    "@tailwindcss/custom-forms": "^0.2.1",
+    "autoprefixer": "^9.8.8",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-postcss": "^9.0.1",
-    "tailwindcss": "^1.9.6",
-    "@fullhuman/postcss-purgecss": "^2.3.0",
-    "autoprefixer": "^9.8.8"
+    "tailwindcss": "^1.9.6"
   }
 }

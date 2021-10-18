@@ -4,8 +4,14 @@ module.exports = {
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      height: {
+        128: '600px'
+      }
+    },
   },
   variants: {},
-  plugins: [],
+  plugins:  [
+  require('@tailwindcss/custom-forms')
+],
 }

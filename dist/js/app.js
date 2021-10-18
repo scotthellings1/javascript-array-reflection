@@ -22,7 +22,12 @@ var imgEl = document.querySelector('#newImage'); // new image button
 var imageContainer = document.querySelector('#imageContainer'); // div that should hold the image.
 
 var authorEl = document.querySelector('#author');
-var unsplashLinkEl = document.querySelector('#unsplashLink'); // gets a list of images from a random page with a limit of 100 items per page
+var unsplashLinkEl = document.querySelector('#unsplashLink');
+var savePhotoBtn = document.querySelector('#saveImage');
+var cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto');
+var savePhotoForm = document.querySelector('#savePhotoForm');
+var savePhotoformBtn = document.querySelector('#savePhoto');
+var emailInput = document.querySelector('#email'); // gets a list of images from a random page with a limit of 100 items per page
 
 var getPhoto = function getPhoto() {
   var randomPage = Math.floor(Math.random() * 10 + 1);
@@ -52,13 +57,21 @@ var displayImage = function displayImage(image) {
 
   img.id = 'loadedImg';
   img.src = image.download_url;
-  img.classList = 'rounded-xl shadow-lg w-full h-auto';
+  img.classList = 'h-128 rounded-xl shadow-lg m-auto';
 };
 
 var PhotoAttributes = function PhotoAttributes(image) {
   authorEl.innerHTML = image.author;
   unsplashLinkEl.setAttribute('href', image.url);
   console.log(image.url);
+};
+
+var validateEmail = function validateEmail(email) {
+  if (email.match(emailRegex) && email.length > 0) {
+    console.log(email + ' valid');
+  } else {
+    console.log(email + ' invalid');
+  }
 }; // remove the last image from the dom
 
 
@@ -72,9 +85,27 @@ event listeners x
 //load the first image on page load
 
 
-document.addEventListener('DOMContentLoaded', getPhoto); // add event listener to the get new image button and remove last image and get a new image
+document.addEventListener('DOMContentLoaded', getPhoto); //single event listener on the document for all click events. e.target applies the event to the specified element.
 
-imgEl.addEventListener('click', function () {
-  removeLastPhoto();
-  getPhoto();
+document.addEventListener('click', function (e) {
+  // if new image button clicked get new image and remove the old image
+  if (e.target === imgEl) {
+    removeLastPhoto();
+    getPhoto();
+  } // if save image button clicked remove the hidden class to show the email input
+
+
+  if (e.target === savePhotoBtn) {
+    savePhotoForm.classList.remove('hidden');
+  } // if the cancel button is clicked hide the show email inpout
+
+
+  if (e.target === cancelSavePhotoBtn) {
+    savePhotoForm.classList.add('hidden');
+  } // validate email
+
+
+  if (e.target === savePhotoformBtn) {
+    validateEmail(emailInput.value);
+  }
 });
