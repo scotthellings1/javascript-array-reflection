@@ -10,7 +10,8 @@ class Photo {
 const URL = 'https://picsum.photos/v2/list?page='
 // Regex for checking a valid email
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-
+const savedEmails = {}
+const savedImages = {}
 /*-----------------
 HTML Selectors
 -----------------*/
@@ -21,7 +22,7 @@ const unsplashLinkEl = document.querySelector('#unsplashLink')
 const savePhotoBtn = document.querySelector('#saveImage')
 const cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto')
 const savePhotoForm = document.querySelector('#savePhotoForm')
-const savePhotoformBtn = document.querySelector('#savePhoto')
+const savePhotoFormBtn = document.querySelector('#savePhoto')
 const emailInput = document.querySelector('#email')
 
 // gets a list of images from a random page with a limit of 100 items per page
@@ -30,7 +31,6 @@ const getPhoto = () => {
   axios.get(`${URL}${randomPage}&limit=100`)
     .then(response => {
        getRandomPhoto(response.data)
-      console.log(response.data)
     })
 }
 // get 1 random image from the result of getPhoto
@@ -39,7 +39,6 @@ const getRandomPhoto = (array) => {
   const image = array[randomPhoto]
   const imageToDisplay = new Photo(image.id, image.author, image.url, image.download_url)
   displayImage(imageToDisplay)
-  console.log(image)
   PhotoAttributes(imageToDisplay)
 }
 
@@ -53,13 +52,13 @@ const displayImage = (image) => {
   img.src = image.download_url
   img.classList = 'h-128 rounded-xl shadow-lg m-auto'
 }
-
+// get the author and the unsplash link of the current photo
 const PhotoAttributes = (image) => {
   authorEl.innerHTML = image.author
   unsplashLinkEl.setAttribute('href',image.url)
   console.log(image.url)
 }
-
+// check that the email input is not empty and contains a properly formatted email address
 const validateEmail = (email) => {
   if (email.match(emailRegex) && email.length > 0)  {
     console.log(email + ' valid')
@@ -68,21 +67,22 @@ const validateEmail = (email) => {
   }
 }
 
-// remove the last image from the dom
+// remove the last image from the dom and hide the show email input if shown
 const removeLastPhoto = () => {
   const lastImage = document.querySelector('#loadedImg')
   imageContainer.removeChild(lastImage)
+  savePhotoForm.classList.add('hidden')
 }
+
+
 
 /*-----------------
 event listeners x
 -----------------*/
 
-//load the first image on page load
+// load the first image on page load
 document.addEventListener('DOMContentLoaded', getPhoto)
-
-
-//single event listener on the document for all click events. e.target applies the event to the specified element.
+// single event listener on the document for all click events. e.target applies the event to the specified element.
 document.addEventListener('click', (e) => {
   // if new image button clicked get new image and remove the old image
   if (e.target === imgEl) {
@@ -91,15 +91,16 @@ document.addEventListener('click', (e) => {
   }
   // if save image button clicked remove the hidden class to show the email input
   if (e.target === savePhotoBtn) {
+    
+    
     savePhotoForm.classList.remove('hidden')
+    
   }
-  // if the cancel button is clicked hide the show email inpout
+  // if the cancel button is clicked hide the show email input
   if (e.target === cancelSavePhotoBtn ) {
     savePhotoForm.classList.add('hidden')
   }
-  // validate email
-  if (e.target === savePhotoformBtn) {
-    validateEmail(emailInput.value)
-  }
 })
-
+emailInput.addEventListener('input', () => {
+  validateEmail(emailInput.value)
+})
