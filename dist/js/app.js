@@ -30,7 +30,9 @@ var savePhotoBtn = document.querySelector('#saveImage');
 var cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto');
 var savePhotoForm = document.querySelector('#savePhotoForm');
 var savePhotoFormBtn = document.querySelector('#savePhoto');
-var emailInput = document.querySelector('#email'); // gets a list of images from a random page with a limit of 100 items per page
+var emailInput = document.querySelector('#email');
+var errorMessageBox = document.querySelector('#errorMessageBox');
+var successMessageBox = document.querySelector('#successMessageBox'); // gets a list of images from a random page with a limit of 100 items per page
 
 var getPhoto = function getPhoto() {
   var randomPage = Math.floor(Math.random() * 10 + 1);
@@ -45,7 +47,6 @@ var getRandomPhoto = function getRandomPhoto(array) {
   var image = array[randomPhoto];
   var imageToDisplay = new Photo(image.id, image.author, image.url, image.download_url);
   displayImage(imageToDisplay);
-  console.log(imageToDisplay);
   PhotoAttributes(imageToDisplay);
 }; // create an img element and append it to the DOM
 
@@ -67,7 +68,6 @@ var displayImage = function displayImage(image) {
 var PhotoAttributes = function PhotoAttributes(image) {
   authorEl.innerHTML = image.author;
   unsplashLinkEl.setAttribute('href', image.url);
-  console.log(image.url);
 }; // check that the email input is not empty and contains a properly formatted email address
 
 
@@ -75,7 +75,7 @@ var validateEmail = function validateEmail(email) {
   if (email.match(emailRegex) && email.length > 0) {
     return email;
   } else {
-    console.log(email + ' invalid');
+    return false;
   }
 }; // remove the last image from the dom and hide the show email input if shown
 
@@ -89,6 +89,10 @@ var removeLastPhoto = function removeLastPhoto() {
 var cleanUp = function cleanUp() {
   removeLastPhoto();
   getPhoto();
+  errorMessageBox.innerHTML = '';
+  errorMessageBox.classList.add('hidden');
+  successMessageBox.innerHTML = "";
+  successMessageBox.classList.add('hidden');
 };
 
 var saveEmail = function saveEmail(email) {
@@ -118,7 +122,7 @@ var saveEmail = function saveEmail(email) {
     }
   }
 };
-/*-----------------
+/*----------------
 event listeners x
 -----------------*/
 // load the first image on page load
@@ -140,16 +144,24 @@ document.addEventListener('click', function (e) {
 
   if (e.target === cancelSavePhotoBtn) {
     savePhotoForm.classList.add('hidden');
+    errorMessageBox.innerHTML = '';
+    errorMessageBox.classList.add('hidden');
   }
 
   if (e.target === savePhotoFormBtn) {
     var isValidEmail = validateEmail(emailInput.value);
 
     if (!isValidEmail) {
+      errorMessageBox.innerHTML = 'Please enter a valid Email';
+      errorMessageBox.classList.remove('hidden');
       console.log('not valid email');
     } else {
-      saveEmail(emailInput.value);
-      cleanUp();
+      successMessageBox.innerHTML = 'Photo Saved!';
+      successMessageBox.classList.remove('hidden');
+      setTimeout(function () {
+        saveEmail(emailInput.value);
+        cleanUp();
+      }, 2000);
     }
   }
 });

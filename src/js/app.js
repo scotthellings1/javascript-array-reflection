@@ -14,6 +14,7 @@ const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}
 let savedEmails = {}
 const savedImages = {}
 let imageToDisplay = null
+
 /*-----------------
 HTML Selectors
 -----------------*/
@@ -26,7 +27,8 @@ const cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto')
 const savePhotoForm = document.querySelector('#savePhotoForm')
 const savePhotoFormBtn = document.querySelector('#savePhoto')
 const emailInput = document.querySelector('#email')
-
+const errorMessageBox = document.querySelector('#errorMessageBox')
+const successMessageBox = document.querySelector('#successMessageBox')
 // gets a list of images from a random page with a limit of 100 items per page
 const getPhoto = () => {
   const randomPage = Math.floor(Math.random() * (10) + 1)
@@ -35,13 +37,13 @@ const getPhoto = () => {
       getRandomPhoto(response.data)
     })
 }
+
 // get 1 random image from the result of getPhoto
 const getRandomPhoto = (array) => {
   const randomPhoto = Math.floor(Math.random() * (array.length - 1))
   const image = array[randomPhoto]
   const imageToDisplay = new Photo(image.id, image.author, image.url, image.download_url)
   displayImage(imageToDisplay)
-  console.log(imageToDisplay)
   PhotoAttributes(imageToDisplay)
 }
 
@@ -56,18 +58,19 @@ const displayImage = (image) => {
   img.classList = 'h-128 rounded-xl shadow-lg m-auto'
   imageToDisplay = image
 }
+
 // get the author and the unsplash link of the current photo
 const PhotoAttributes = (image) => {
   authorEl.innerHTML = image.author
   unsplashLinkEl.setAttribute('href', image.url)
-  console.log(image.url)
 }
+
 // check that the email input is not empty and contains a properly formatted email address
 const validateEmail = (email) => {
   if (email.match(emailRegex) && email.length > 0) {
     return email
   } else {
-    console.log(email + ' invalid')
+    return false
   }
 }
 
@@ -77,15 +80,19 @@ const removeLastPhoto = () => {
   imageContainer.removeChild(lastImage)
   savePhotoForm.classList.add('hidden')
 }
+
 const cleanUp = () => {
   removeLastPhoto()
   getPhoto()
+  errorMessageBox.innerHTML = ''
+  errorMessageBox.classList.add('hidden')
+  successMessageBox.innerHTML = ""
+  successMessageBox.classList.add('hidden')
 }
 
 const saveEmail = (email) => {
   let isNewEmail = true
   let alreadyLinked = false
-  
   for (savedEmail in savedEmails) {
     if (savedEmail === email) {
       isNewEmail = false
@@ -94,7 +101,6 @@ const saveEmail = (email) => {
   }
   if (isNewEmail) {
     savedEmails[`${email}`] = [imageToDisplay]
-    
   } else {
     for (let i = 0; i < savedEmails[`${email}`].length; i++) {
       if (savedEmails[`${email}`][i].id === imageToDisplay.id) {
@@ -105,14 +111,11 @@ const saveEmail = (email) => {
     }
     if (!alreadyLinked) {
       savedEmails[`${email}`].push(imageToDisplay)
-      
     }
   }
-  
 }
 
-
-/*-----------------
+/*----------------
 event listeners x
 -----------------*/
 
@@ -131,16 +134,25 @@ document.addEventListener('click', (e) => {
   // if the cancel button is clicked hide the show email input
   if (e.target === cancelSavePhotoBtn) {
     savePhotoForm.classList.add('hidden')
+    errorMessageBox.innerHTML = ''
+    errorMessageBox.classList.add('hidden')
   }
-  
   
   if (e.target === savePhotoFormBtn) {
     let isValidEmail = validateEmail(emailInput.value)
     if (!isValidEmail) {
+      errorMessageBox.innerHTML = 'Please enter a valid Email'
+      errorMessageBox.classList.remove('hidden')
       console.log('not valid email')
     } else {
-      saveEmail(emailInput.value)
-      cleanUp()
+      
+      successMessageBox.innerHTML = 'Photo Saved!'
+      successMessageBox.classList.remove('hidden')
+      setTimeout(() => {
+        saveEmail(emailInput.value)
+        cleanUp()
+      }, 2000)
+      
     }
   }
 })
