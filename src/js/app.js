@@ -10,8 +10,9 @@ class Photo {
 const URL = 'https://picsum.photos/v2/list?page='
 // Regex for checking a valid email
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-const savedEmails = {}
+let savedEmails = {}
 const savedImages = {}
+let imageToDisplay = null
 /*-----------------
 HTML Selectors
 -----------------*/
@@ -39,6 +40,7 @@ const getRandomPhoto = (array) => {
   const image = array[randomPhoto]
   const imageToDisplay = new Photo(image.id, image.author, image.url, image.download_url)
   displayImage(imageToDisplay)
+  console.log(imageToDisplay)
   PhotoAttributes(imageToDisplay)
 }
 
@@ -51,6 +53,7 @@ const displayImage = (image) => {
   img.id = 'loadedImg'
   img.src = image.download_url
   img.classList = 'h-128 rounded-xl shadow-lg m-auto'
+  imageToDisplay = image
 }
 // get the author and the unsplash link of the current photo
 const PhotoAttributes = (image) => {
@@ -61,7 +64,7 @@ const PhotoAttributes = (image) => {
 // check that the email input is not empty and contains a properly formatted email address
 const validateEmail = (email) => {
   if (email.match(emailRegex) && email.length > 0)  {
-    console.log(email + ' valid')
+    return email
   } else{
     console.log(email + ' invalid')
   }
@@ -72,6 +75,35 @@ const removeLastPhoto = () => {
   const lastImage = document.querySelector('#loadedImg')
   imageContainer.removeChild(lastImage)
   savePhotoForm.classList.add('hidden')
+}
+
+const saveEmail = (email) => {
+  let isNewEmail = true
+  let alreadyLinked = false
+  
+  for (savedEmail in savedEmails) {
+    if (savedEmail === email) {
+      isNewEmail = false
+     break
+    }
+  }
+  if (isNewEmail) {
+    savedEmails[`${email}`] = [imageToDisplay]
+    
+  } else {
+    for (let i = 0; i < savedEmails[`${email}`].length; i++) {
+      if (savedEmails[`${email}`][i].id === imageToDisplay.id) {
+        alreadyLinked = true
+        console.log('image already linked')
+        break
+      }
+    }
+    if (!alreadyLinked) {
+      savedEmails[`${email}`].push(imageToDisplay)
+    
+    }
+  }
+  
 }
 
 
@@ -91,16 +123,24 @@ document.addEventListener('click', (e) => {
   }
   // if save image button clicked remove the hidden class to show the email input
   if (e.target === savePhotoBtn) {
-    
-    
     savePhotoForm.classList.remove('hidden')
-    
   }
   // if the cancel button is clicked hide the show email input
   if (e.target === cancelSavePhotoBtn ) {
     savePhotoForm.classList.add('hidden')
   }
+  
+  
+  
+  if (e.target=== savePhotoFormBtn) {
+    let isValidEmail = validateEmail(emailInput.value)
+    if(!isValidEmail) {
+      console.log('not valid email')
+    } else {
+      saveEmail(emailInput.value)
+      removeLastPhoto()
+      getPhoto()
+    }
+  }
 })
-emailInput.addEventListener('input', () => {
-  validateEmail(emailInput.value)
-})
+

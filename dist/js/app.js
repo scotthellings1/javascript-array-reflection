@@ -15,6 +15,7 @@ var URL = 'https://picsum.photos/v2/list?page='; // Regex for checking a valid e
 var emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 var savedEmails = {};
 var savedImages = {};
+var imageToDisplay = null;
 /*-----------------
 HTML Selectors
 -----------------*/
@@ -44,6 +45,7 @@ var getRandomPhoto = function getRandomPhoto(array) {
   var image = array[randomPhoto];
   var imageToDisplay = new Photo(image.id, image.author, image.url, image.download_url);
   displayImage(imageToDisplay);
+  console.log(imageToDisplay);
   PhotoAttributes(imageToDisplay);
 }; // create an img element and append it to the DOM
 
@@ -58,6 +60,7 @@ var displayImage = function displayImage(image) {
   img.id = 'loadedImg';
   img.src = image.download_url;
   img.classList = 'h-128 rounded-xl shadow-lg m-auto';
+  imageToDisplay = image;
 }; // get the author and the unsplash link of the current photo
 
 
@@ -70,7 +73,7 @@ var PhotoAttributes = function PhotoAttributes(image) {
 
 var validateEmail = function validateEmail(email) {
   if (email.match(emailRegex) && email.length > 0) {
-    console.log(email + ' valid');
+    return email;
   } else {
     console.log(email + ' invalid');
   }
@@ -81,6 +84,39 @@ var removeLastPhoto = function removeLastPhoto() {
   var lastImage = document.querySelector('#loadedImg');
   imageContainer.removeChild(lastImage);
   savePhotoForm.classList.add('hidden');
+};
+
+var cleanUp = function cleanUp() {
+  removeLastPhoto();
+  getPhoto();
+};
+
+var saveEmail = function saveEmail(email) {
+  var isNewEmail = true;
+  var alreadyLinked = false;
+
+  for (savedEmail in savedEmails) {
+    if (savedEmail === email) {
+      isNewEmail = false;
+      break;
+    }
+  }
+
+  if (isNewEmail) {
+    savedEmails["".concat(email)] = [imageToDisplay];
+  } else {
+    for (var i = 0; i < savedEmails["".concat(email)].length; i++) {
+      if (savedEmails["".concat(email)][i].id === imageToDisplay.id) {
+        alreadyLinked = true;
+        console.log('image already linked');
+        break;
+      }
+    }
+
+    if (!alreadyLinked) {
+      savedEmails["".concat(email)].push(imageToDisplay);
+    }
+  }
 };
 /*-----------------
 event listeners x
@@ -93,8 +129,7 @@ document.addEventListener('DOMContentLoaded', getPhoto); // single event listene
 document.addEventListener('click', function (e) {
   // if new image button clicked get new image and remove the old image
   if (e.target === imgEl) {
-    removeLastPhoto();
-    getPhoto();
+    cleanUp();
   } // if save image button clicked remove the hidden class to show the email input
 
 
@@ -106,7 +141,15 @@ document.addEventListener('click', function (e) {
   if (e.target === cancelSavePhotoBtn) {
     savePhotoForm.classList.add('hidden');
   }
-});
-emailInput.addEventListener('input', function () {
-  validateEmail(emailInput.value);
+
+  if (e.target === savePhotoFormBtn) {
+    var isValidEmail = validateEmail(emailInput.value);
+
+    if (!isValidEmail) {
+      console.log('not valid email');
+    } else {
+      saveEmail(emailInput.value);
+      cleanUp();
+    }
+  }
 });
