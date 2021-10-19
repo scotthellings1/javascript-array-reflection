@@ -6,6 +6,7 @@ class Photo {
     this.download_url = download_url
   }
 }
+
 // base url for lorem picsum
 const URL = 'https://picsum.photos/v2/list?page='
 // Regex for checking a valid email
@@ -31,12 +32,12 @@ const getPhoto = () => {
   const randomPage = Math.floor(Math.random() * (10) + 1)
   axios.get(`${URL}${randomPage}&limit=100`)
     .then(response => {
-       getRandomPhoto(response.data)
+      getRandomPhoto(response.data)
     })
 }
 // get 1 random image from the result of getPhoto
 const getRandomPhoto = (array) => {
-  const randomPhoto = Math.floor(Math.random() * (array.length -1))
+  const randomPhoto = Math.floor(Math.random() * (array.length - 1))
   const image = array[randomPhoto]
   const imageToDisplay = new Photo(image.id, image.author, image.url, image.download_url)
   displayImage(imageToDisplay)
@@ -58,14 +59,14 @@ const displayImage = (image) => {
 // get the author and the unsplash link of the current photo
 const PhotoAttributes = (image) => {
   authorEl.innerHTML = image.author
-  unsplashLinkEl.setAttribute('href',image.url)
+  unsplashLinkEl.setAttribute('href', image.url)
   console.log(image.url)
 }
 // check that the email input is not empty and contains a properly formatted email address
 const validateEmail = (email) => {
-  if (email.match(emailRegex) && email.length > 0)  {
+  if (email.match(emailRegex) && email.length > 0) {
     return email
-  } else{
+  } else {
     console.log(email + ' invalid')
   }
 }
@@ -76,6 +77,10 @@ const removeLastPhoto = () => {
   imageContainer.removeChild(lastImage)
   savePhotoForm.classList.add('hidden')
 }
+const cleanUp = () => {
+  removeLastPhoto()
+  getPhoto()
+}
 
 const saveEmail = (email) => {
   let isNewEmail = true
@@ -84,7 +89,7 @@ const saveEmail = (email) => {
   for (savedEmail in savedEmails) {
     if (savedEmail === email) {
       isNewEmail = false
-     break
+      break
     }
   }
   if (isNewEmail) {
@@ -100,12 +105,11 @@ const saveEmail = (email) => {
     }
     if (!alreadyLinked) {
       savedEmails[`${email}`].push(imageToDisplay)
-    
+      
     }
   }
   
 }
-
 
 
 /*-----------------
@@ -118,28 +122,25 @@ document.addEventListener('DOMContentLoaded', getPhoto)
 document.addEventListener('click', (e) => {
   // if new image button clicked get new image and remove the old image
   if (e.target === imgEl) {
-    removeLastPhoto()
-    getPhoto()
+    cleanUp()
   }
   // if save image button clicked remove the hidden class to show the email input
   if (e.target === savePhotoBtn) {
     savePhotoForm.classList.remove('hidden')
   }
   // if the cancel button is clicked hide the show email input
-  if (e.target === cancelSavePhotoBtn ) {
+  if (e.target === cancelSavePhotoBtn) {
     savePhotoForm.classList.add('hidden')
   }
   
   
-  
-  if (e.target=== savePhotoFormBtn) {
+  if (e.target === savePhotoFormBtn) {
     let isValidEmail = validateEmail(emailInput.value)
-    if(!isValidEmail) {
+    if (!isValidEmail) {
       console.log('not valid email')
     } else {
       saveEmail(emailInput.value)
-      removeLastPhoto()
-      getPhoto()
+      cleanUp()
     }
   }
 })
