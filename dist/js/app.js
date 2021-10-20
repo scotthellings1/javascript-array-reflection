@@ -32,7 +32,8 @@ var savePhotoForm = document.querySelector('#savePhotoForm');
 var savePhotoFormBtn = document.querySelector('#savePhoto');
 var emailInput = document.querySelector('#email');
 var errorMessageBox = document.querySelector('#errorMessageBox');
-var successMessageBox = document.querySelector('#successMessageBox'); // gets a list of images from a random page with a limit of 100 items per page
+var successMessageBox = document.querySelector('#successMessageBox');
+var linkedEmailList = document.querySelector('#linkedEmailList'); // gets a list of images from a random page with a limit of 100 items per page
 
 var getPhoto = function getPhoto() {
   var randomPage = Math.floor(Math.random() * 10 + 1);
@@ -91,9 +92,35 @@ var cleanUp = function cleanUp() {
   getPhoto();
   errorMessageBox.innerHTML = '';
   errorMessageBox.classList.add('hidden');
-  successMessageBox.innerHTML = "";
+  successMessageBox.innerHTML = '';
   successMessageBox.classList.add('hidden');
-};
+}; // get a list of the currently saved email addresses and save as an array
+
+
+var listEmails = function listEmails() {
+  var emails = [];
+
+  for (var email in savedEmails) {
+    emails.push(email);
+  }
+
+  return emails;
+}; // remove the old list and update with the current list of saved emails and append each one as a li to the ul in the
+// sidebar
+
+
+var updateEmailList = function updateEmailList() {
+  newList = listEmails();
+  linkedEmailList.innerHTML = '';
+
+  for (var i = 0; i < newList.length; i++) {
+    var li = document.createElement('li');
+    li.classList = 'cursor-pointer py-2 underline';
+    li.innerHTML = newList[i];
+    linkedEmailList.appendChild(li);
+  }
+}; // save the current photo and associate it with an email address
+
 
 var saveEmail = function saveEmail(email) {
   var isNewEmail = true;
@@ -108,6 +135,7 @@ var saveEmail = function saveEmail(email) {
 
   if (isNewEmail) {
     savedEmails["".concat(email)] = [imageToDisplay];
+    updateEmailList();
   } else {
     for (var i = 0; i < savedEmails["".concat(email)].length; i++) {
       if (savedEmails["".concat(email)][i].id === imageToDisplay.id) {
@@ -119,18 +147,9 @@ var saveEmail = function saveEmail(email) {
 
     if (!alreadyLinked) {
       savedEmails["".concat(email)].push(imageToDisplay);
+      updateEmailList();
     }
   }
-};
-
-var listEmails = function listEmails() {
-  var emails = [];
-
-  for (var email in savedEmails) {
-    emails.push(email);
-  }
-
-  return emails;
 };
 /*----------------
 event listeners x

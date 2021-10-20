@@ -29,6 +29,7 @@ const savePhotoFormBtn = document.querySelector('#savePhoto')
 const emailInput = document.querySelector('#email')
 const errorMessageBox = document.querySelector('#errorMessageBox')
 const successMessageBox = document.querySelector('#successMessageBox')
+const linkedEmailList = document.querySelector('#linkedEmailList')
 
 
 // gets a list of images from a random page with a limit of 100 items per page
@@ -88,10 +89,34 @@ const cleanUp = () => {
   getPhoto()
   errorMessageBox.innerHTML = ''
   errorMessageBox.classList.add('hidden')
-  successMessageBox.innerHTML = ""
+  successMessageBox.innerHTML = ''
   successMessageBox.classList.add('hidden')
 }
 
+// get a list of the currently saved email addresses and save as an array
+const listEmails = () => {
+  let emails = []
+  for (let email in savedEmails) {
+    emails.push(email)
+  }
+  return emails
+  
+}
+
+// remove the old list and update with the current list of saved emails and append each one as a li to the ul in the
+// sidebar
+const updateEmailList = () => {
+  newList = listEmails()
+  linkedEmailList.innerHTML = ''
+  for (let i = 0; i < newList.length; i++) {
+    let li = document.createElement('li')
+    li.classList = 'cursor-pointer py-2 underline'
+    li.innerHTML = newList[i]
+    linkedEmailList.appendChild(li)
+  }
+  
+}
+// save the current photo and associate it with an email address
 const saveEmail = (email) => {
   let isNewEmail = true
   let alreadyLinked = false
@@ -103,6 +128,7 @@ const saveEmail = (email) => {
   }
   if (isNewEmail) {
     savedEmails[`${email}`] = [imageToDisplay]
+    updateEmailList()
   } else {
     for (let i = 0; i < savedEmails[`${email}`].length; i++) {
       if (savedEmails[`${email}`][i].id === imageToDisplay.id) {
@@ -113,19 +139,12 @@ const saveEmail = (email) => {
     }
     if (!alreadyLinked) {
       savedEmails[`${email}`].push(imageToDisplay)
+      updateEmailList()
     }
   }
 }
 
-const listEmails = () => {
-  let emails = []
 
-  for (let email in savedEmails) {
-    emails.push(email)
-    }
-  return emails
-
-}
 /*----------------
 event listeners x
 -----------------*/
@@ -156,7 +175,6 @@ document.addEventListener('click', (e) => {
       errorMessageBox.classList.remove('hidden')
       console.log('not valid email')
     } else {
-      
       successMessageBox.innerHTML = 'Photo Saved!'
       successMessageBox.classList.remove('hidden')
       setTimeout(() => {
