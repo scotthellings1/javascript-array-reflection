@@ -29,6 +29,8 @@ const savePhotoFormBtn = document.querySelector('#savePhoto')
 const emailInput = document.querySelector('#email')
 const errorMessageBox = document.querySelector('#errorMessageBox')
 const successMessageBox = document.querySelector('#successMessageBox')
+
+
 // gets a list of images from a random page with a limit of 100 items per page
 const getPhoto = () => {
   const randomPage = Math.floor(Math.random() * (10) + 1)
@@ -115,6 +117,15 @@ const saveEmail = (email) => {
   }
 }
 
+const listEmails = () => {
+  let emails = []
+
+  for (let email in savedEmails) {
+    emails.push(email)
+    }
+  return emails
+
+}
 /*----------------
 event listeners x
 -----------------*/

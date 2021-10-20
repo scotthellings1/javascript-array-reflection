@@ -122,6 +122,16 @@ var saveEmail = function saveEmail(email) {
     }
   }
 };
+
+var listEmails = function listEmails() {
+  var emails = [];
+
+  for (var email in savedEmails) {
+    emails.push(email);
+  }
+
+  return emails;
+};
 /*----------------
 event listeners x
 -----------------*/
