@@ -12,7 +12,6 @@ const URL = 'https://picsum.photos/v2/list?page='
 // Regex for checking a valid email
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 let savedEmails = {}
-const savedImages = {}
 let imageToDisplay = null
 
 /*-----------------
@@ -30,6 +29,7 @@ const emailInput = document.querySelector('#email')
 const errorMessageBox = document.querySelector('#errorMessageBox')
 const successMessageBox = document.querySelector('#successMessageBox')
 const linkedEmailList = document.querySelector('#linkedEmailList')
+const photoForm = document.querySelector('#photoForm')
 
 
 // gets a list of images from a random page with a limit of 100 items per page
@@ -100,7 +100,6 @@ const listEmails = () => {
     emails.push(email)
   }
   return emails
-  
 }
 
 // remove the old list and update with the current list of saved emails and append each one as a li to the ul in the
@@ -114,8 +113,8 @@ const updateEmailList = () => {
     li.innerHTML = newList[i]
     linkedEmailList.appendChild(li)
   }
-  
 }
+
 // save the current photo and associate it with an email address
 const saveEmail = (email) => {
   let isNewEmail = true
@@ -144,10 +143,23 @@ const saveEmail = (email) => {
   }
 }
 
-
 /*----------------
 event listeners x
 -----------------*/
+// prevent the default form submission when pressing the enter key in the email field
+photoForm.addEventListener('submit', (e) =>{
+  e.preventDefault()
+})
+
+// add listener to enter key to submit and save the photo
+
+
+  photoForm.addEventListener("keyup", (e) => {
+    e.preventDefault();
+    if (e.keyCode === 13) {
+      savePhotoFormBtn.click();
+    }
+  });
 
 // load the first image on page load
 document.addEventListener('DOMContentLoaded', getPhoto)
@@ -181,7 +193,6 @@ document.addEventListener('click', (e) => {
         saveEmail(emailInput.value)
         cleanUp()
       }, 2000)
-      
     }
   }
 })
