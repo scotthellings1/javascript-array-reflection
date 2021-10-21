@@ -8,7 +8,7 @@ class Photo {
 }
 
 // base url for lorem picsum
-const URL = 'https://picsum.photos/v2/list?page='
+const picsumURL = 'https://picsum.photos/v2/list?page='
 // Regex for checking a valid email
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 let savedEmails = {}
@@ -17,25 +17,25 @@ let imageToDisplay = null
 /*-----------------
 HTML Selectors
 -----------------*/
-const imgEl = document.querySelector('#newImage') // new image button
-const imageContainer = document.querySelector('#imageContainer') // div that should hold the image.
-const authorEl = document.querySelector('#author')
-const unsplashLinkEl = document.querySelector('#unsplashLink')
-const savePhotoBtn = document.querySelector('#saveImage')
-const cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto')
-const savePhotoForm = document.querySelector('#savePhotoForm')
-const savePhotoFormBtn = document.querySelector('#savePhoto')
-const emailInput = document.querySelector('#email')
-const errorMessageBox = document.querySelector('#errorMessageBox')
-const successMessageBox = document.querySelector('#successMessageBox')
-const linkedEmailList = document.querySelector('#linkedEmailList')
-const photoForm = document.querySelector('#photoForm')
+const imgEl = document.querySelector('#newImage'), // new image button
+ imageContainer = document.querySelector('#imageContainer'),// div that should hold the image.
+ authorEl = document.querySelector('#author'),
+ unsplashLinkEl = document.querySelector('#unsplashLink'),
+ savePhotoBtn = document.querySelector('#saveImage'),
+ cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto'),
+ savePhotoForm = document.querySelector('#savePhotoForm'),
+ savePhotoFormBtn = document.querySelector('#savePhoto'),
+ emailInput = document.querySelector('#email'),
+ errorMessageBox = document.querySelector('#errorMessageBox'),
+ successMessageBox = document.querySelector('#successMessageBox'),
+ linkedEmailList = document.querySelector('#linkedEmailList'),
+ photoForm = document.querySelector('#photoForm')
 
 
 // gets a list of images from a random page with a limit of 100 items per page
 const getPhoto = () => {
   const randomPage = Math.floor(Math.random() * (10) + 1)
-  axios.get(`${URL}${randomPage}&limit=100`)
+  axios.get(`${picsumURL}${randomPage}&limit=100`)
     .then(response => {
       getRandomPhoto(response.data)
     })
@@ -58,7 +58,7 @@ const displayImage = (image) => {
   }
   img.id = 'loadedImg'
   img.src = image.download_url
-  img.classList = 'h-128 rounded-xl shadow-lg m-auto'
+  img.classList.add('h-128', 'rounded-xl', 'shadow-lg', 'm-auto')
   imageToDisplay = image
 }
 
@@ -87,29 +87,35 @@ const removeLastPhoto = () => {
 const cleanUp = () => {
   removeLastPhoto()
   getPhoto()
-  errorMessageBox.innerHTML = ''
-  errorMessageBox.classList.add('hidden')
-  successMessageBox.innerHTML = ''
-  successMessageBox.classList.add('hidden')
+  let elements = [errorMessageBox, successMessageBox]
+  elements.forEach(element => {
+    element.innerHTML = ''
+    element.classList.add('hidden')
+  })
 }
 
 // get a list of the currently saved email addresses and save as an array
 const listEmails = () => {
   let emails = []
+  
+  
   for (let email in savedEmails) {
     emails.push(email)
   }
   return emails
 }
 
+
+
+
 // remove the old list and update with the current list of saved emails and append each one as a li to the ul in the
 // sidebar
 const updateEmailList = () => {
-  newList = listEmails()
+  let newList = listEmails()
   linkedEmailList.innerHTML = ''
   for (let i = 0; i < newList.length; i++) {
     let li = document.createElement('li')
-    li.classList = 'cursor-pointer py-2 underline'
+    li.classList.add('cursor-pointer', 'py-2', 'underline')
     li.innerHTML = newList[i]
     linkedEmailList.appendChild(li)
   }
@@ -119,7 +125,7 @@ const updateEmailList = () => {
 const saveEmail = (email) => {
   let isNewEmail = true
   let alreadyLinked = false
-  for (savedEmail in savedEmails) {
+  for ( let savedEmail in savedEmails) {
     if (savedEmail === email) {
       isNewEmail = false
       break
@@ -185,8 +191,8 @@ document.addEventListener('click', (e) => {
     if (!isValidEmail) {
       errorMessageBox.innerHTML = 'Please enter a valid Email'
       errorMessageBox.classList.remove('hidden')
-      console.log('not valid email')
     } else {
+      errorMessageBox.classList.add('hidden')
       successMessageBox.innerHTML = 'Photo Saved!'
       successMessageBox.classList.remove('hidden')
       setTimeout(() => {

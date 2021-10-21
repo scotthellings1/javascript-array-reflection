@@ -10,7 +10,7 @@ var Photo = function Photo(id, author, url, download_url) {
 }; // base url for lorem picsum
 
 
-var URL = 'https://picsum.photos/v2/list?page='; // Regex for checking a valid email
+var picsumURL = 'https://picsum.photos/v2/list?page='; // Regex for checking a valid email
 
 var emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 var savedEmails = {};
@@ -19,25 +19,25 @@ var imageToDisplay = null;
 HTML Selectors
 -----------------*/
 
-var imgEl = document.querySelector('#newImage'); // new image button
-
-var imageContainer = document.querySelector('#imageContainer'); // div that should hold the image.
-
-var authorEl = document.querySelector('#author');
-var unsplashLinkEl = document.querySelector('#unsplashLink');
-var savePhotoBtn = document.querySelector('#saveImage');
-var cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto');
-var savePhotoForm = document.querySelector('#savePhotoForm');
-var savePhotoFormBtn = document.querySelector('#savePhoto');
-var emailInput = document.querySelector('#email');
-var errorMessageBox = document.querySelector('#errorMessageBox');
-var successMessageBox = document.querySelector('#successMessageBox');
-var linkedEmailList = document.querySelector('#linkedEmailList');
-var photoForm = document.querySelector('#photoForm'); // gets a list of images from a random page with a limit of 100 items per page
+var imgEl = document.querySelector('#newImage'),
+    // new image button
+imageContainer = document.querySelector('#imageContainer'),
+    // div that should hold the image.
+authorEl = document.querySelector('#author'),
+    unsplashLinkEl = document.querySelector('#unsplashLink'),
+    savePhotoBtn = document.querySelector('#saveImage'),
+    cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto'),
+    savePhotoForm = document.querySelector('#savePhotoForm'),
+    savePhotoFormBtn = document.querySelector('#savePhoto'),
+    emailInput = document.querySelector('#email'),
+    errorMessageBox = document.querySelector('#errorMessageBox'),
+    successMessageBox = document.querySelector('#successMessageBox'),
+    linkedEmailList = document.querySelector('#linkedEmailList'),
+    photoForm = document.querySelector('#photoForm'); // gets a list of images from a random page with a limit of 100 items per page
 
 var getPhoto = function getPhoto() {
   var randomPage = Math.floor(Math.random() * 10 + 1);
-  axios.get("".concat(URL).concat(randomPage, "&limit=100")).then(function (response) {
+  axios.get("".concat(picsumURL).concat(randomPage, "&limit=100")).then(function (response) {
     getRandomPhoto(response.data);
   });
 }; // get 1 random image from the result of getPhoto
@@ -61,7 +61,7 @@ var displayImage = function displayImage(image) {
 
   img.id = 'loadedImg';
   img.src = image.download_url;
-  img.classList = 'h-128 rounded-xl shadow-lg m-auto';
+  img.classList.add('h-128', 'rounded-xl', 'shadow-lg', 'm-auto');
   imageToDisplay = image;
 }; // get the author and the unsplash link of the current photo
 
@@ -90,10 +90,11 @@ var removeLastPhoto = function removeLastPhoto() {
 var cleanUp = function cleanUp() {
   removeLastPhoto();
   getPhoto();
-  errorMessageBox.innerHTML = '';
-  errorMessageBox.classList.add('hidden');
-  successMessageBox.innerHTML = '';
-  successMessageBox.classList.add('hidden');
+  var elements = [errorMessageBox, successMessageBox];
+  elements.forEach(function (element) {
+    element.innerHTML = '';
+    element.classList.add('hidden');
+  });
 }; // get a list of the currently saved email addresses and save as an array
 
 
@@ -110,12 +111,12 @@ var listEmails = function listEmails() {
 
 
 var updateEmailList = function updateEmailList() {
-  newList = listEmails();
+  var newList = listEmails();
   linkedEmailList.innerHTML = '';
 
   for (var i = 0; i < newList.length; i++) {
     var li = document.createElement('li');
-    li.classList = 'cursor-pointer py-2 underline';
+    li.classList.add('cursor-pointer', 'py-2', 'underline');
     li.innerHTML = newList[i];
     linkedEmailList.appendChild(li);
   }
@@ -126,7 +127,7 @@ var saveEmail = function saveEmail(email) {
   var isNewEmail = true;
   var alreadyLinked = false;
 
-  for (savedEmail in savedEmails) {
+  for (var savedEmail in savedEmails) {
     if (savedEmail === email) {
       isNewEmail = false;
       break;
@@ -195,8 +196,8 @@ document.addEventListener('click', function (e) {
     if (!isValidEmail) {
       errorMessageBox.innerHTML = 'Please enter a valid Email';
       errorMessageBox.classList.remove('hidden');
-      console.log('not valid email');
     } else {
+      errorMessageBox.classList.add('hidden');
       successMessageBox.innerHTML = 'Photo Saved!';
       successMessageBox.classList.remove('hidden');
       setTimeout(function () {
