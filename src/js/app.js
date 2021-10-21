@@ -29,8 +29,8 @@ const imgEl = document.querySelector('#newImage'), // new image button
  errorMessageBox = document.querySelector('#errorMessageBox'),
  successMessageBox = document.querySelector('#successMessageBox'),
  linkedEmailList = document.querySelector('#linkedEmailList'),
- photoForm = document.querySelector('#photoForm')
-
+ photoForm = document.querySelector('#photoForm'),
+ linkedEmail = document.querySelector('.linked-email')
 
 // gets a list of images from a random page with a limit of 100 items per page
 const getPhoto = () => {
@@ -97,8 +97,6 @@ const cleanUp = () => {
 // get a list of the currently saved email addresses and save as an array
 const listEmails = () => {
   let emails = []
-  
-  
   for (let email in savedEmails) {
     emails.push(email)
   }
@@ -112,11 +110,12 @@ const listEmails = () => {
 // sidebar
 const updateEmailList = () => {
   let newList = listEmails()
+
   linkedEmailList.innerHTML = ''
   for (let i = 0; i < newList.length; i++) {
     let li = document.createElement('li')
-    li.classList.add('cursor-pointer', 'py-2', 'underline')
-    li.innerHTML = newList[i]
+    li.classList.add('cursor-pointer', 'py-2',  'linked-email')
+    li.innerHTML = `${newList[i]}<span class="pr-2 text-center ml-2 bg-blue-400 rounded-full"> ${savedEmails[newList[i]].length}</span>`
     linkedEmailList.appendChild(li)
   }
 }
@@ -147,6 +146,10 @@ const saveEmail = (email) => {
       updateEmailList()
     }
   }
+}
+
+const getLinkedPhotos = () => {
+
 }
 
 /*----------------

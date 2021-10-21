@@ -7,7 +7,7 @@
 
 .pushy {
   position: fixed;
-  width: 256px;
+  width: 20rem;
   height: 100%;
   top: 0;
   z-index: 9999;
@@ -47,21 +47,21 @@
 /* Menu Movement */
 
 .pushy-left {
-  transform: translate3d(-256px, 0, 0);
+  transform: translate3d(-20rem, 0, 0);
 }
 
 .pushy-open-left #container,
 .pushy-open-left .push {
-  transform: translate3d(256px, 0, 0);
+  transform: translate3d(20rem, 0, 0);
 }
 
 .pushy-right {
-  transform: translate3d(256px, 0, 0);
+  transform: translate3d(20rem, 0, 0);
 }
 
 .pushy-open-right #container,
 .pushy-open-right .push {
-  transform: translate3d(-256px, 0, 0);
+  transform: translate3d(-20rem, 0, 0);
 }
 
 .pushy-open-left .pushy,

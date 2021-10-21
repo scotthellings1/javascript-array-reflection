@@ -33,7 +33,8 @@ authorEl = document.querySelector('#author'),
     errorMessageBox = document.querySelector('#errorMessageBox'),
     successMessageBox = document.querySelector('#successMessageBox'),
     linkedEmailList = document.querySelector('#linkedEmailList'),
-    photoForm = document.querySelector('#photoForm'); // gets a list of images from a random page with a limit of 100 items per page
+    photoForm = document.querySelector('#photoForm'),
+    linkedEmail = document.querySelector('.linked-email'); // gets a list of images from a random page with a limit of 100 items per page
 
 var getPhoto = function getPhoto() {
   var randomPage = Math.floor(Math.random() * 10 + 1);
@@ -116,8 +117,8 @@ var updateEmailList = function updateEmailList() {
 
   for (var i = 0; i < newList.length; i++) {
     var li = document.createElement('li');
-    li.classList.add('cursor-pointer', 'py-2', 'underline');
-    li.innerHTML = newList[i];
+    li.classList.add('cursor-pointer', 'py-2', 'linked-email');
+    li.innerHTML = "".concat(newList[i], "<span class=\"pr-2 text-center ml-2 bg-blue-400 rounded-full\"> ").concat(savedEmails[newList[i]].length, "</span>");
     linkedEmailList.appendChild(li);
   }
 }; // save the current photo and associate it with an email address
@@ -152,6 +153,8 @@ var saveEmail = function saveEmail(email) {
     }
   }
 };
+
+var getLinkedPhotos = function getLinkedPhotos() {};
 /*----------------
 event listeners x
 -----------------*/
