@@ -150,12 +150,13 @@ const saveEmail = (email) => {
   }
 }
 
+// show the gallery container and buttons
 const createGallery= () => {
   buttonsContainer.classList.add('hidden')
   gallery.classList.remove('hidden')
   galleryButtonsContainer.classList.remove('hidden')
 }
-
+// remove all the images in the current gallery and hide the gallery buttons
 const destroyGallery = () => {
   buttonsContainer.classList.remove('hidden')
   galleryButtonsContainer.classList.add('hidden')
@@ -163,19 +164,21 @@ const destroyGallery = () => {
   gallery.innerHTML = ''
 }
 
+// get and display the images for a linked email address
 const getLinkedPhotos = (linkedEmail) => {
   let emailstr = linkedEmail.innerText
   let email = emailstr.split(" ")[0]
   const photos = savedEmails[email]
-
   destroyGallery()
   createGallery()
+  // set image width to full width if only 1 image
   if (photos.length === 1) {
     img = new Image()
     img.src = photos[0].download_url
     img.classList.add('w-full', 'flex-shrink', 'p-2', 'rounded-xl')
     gallery.appendChild(img)
   }
+  // set image width to 50% if there are 2 images
   if (photos.length === 2) {
     for (let i = 0; i <photos.length ; i++) {
       img = new Image()
@@ -184,6 +187,7 @@ const getLinkedPhotos = (linkedEmail) => {
       gallery.appendChild(img)
     }
   }
+  // if there are more than 2 images set the width of the images to 33%
   if (photos.length > 2) {
     for (let i = 0; i <photos.length ; i++) {
       img = new Image()
@@ -210,11 +214,16 @@ photoForm.addEventListener('submit', (e) =>{
       savePhotoFormBtn.click();
     }
   });
+// add event listener to each li in the side menu to link to the gallery for a linked email
 linkedEmailList.addEventListener('click', (e) => {
-  if (document.querySelector('#loadedImg')) {
-    removeLastPhoto()
+ // if the are no linked emails do not load the gallery, else call the getLinkedPhotos function which loads the gallery
+  if (e.target.innerHTML !== 'No Emails Saved yet!'){
+    // if there is a loaded image remove it from the DOM
+    if (document.querySelector('#loadedImg')) {
+      removeLastPhoto()
+    }
+    getLinkedPhotos(e.target)
   }
-  getLinkedPhotos(e.target)
 })
 // load the first image on page load
 document.addEventListener('DOMContentLoaded', getPhoto)
@@ -236,7 +245,7 @@ document.addEventListener('click', (e) => {
     errorMessageBox.innerHTML = ''
     errorMessageBox.classList.add('hidden')
   }
-  
+  // close the gallery and get a new photo to link to an email
   if (e.target === GalleryNewImage) {
     destroyGallery()
     getPhoto()
@@ -258,4 +267,3 @@ document.addEventListener('click', (e) => {
     }
   }
 })
-

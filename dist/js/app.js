@@ -155,34 +155,38 @@ var saveEmail = function saveEmail(email) {
       updateEmailList();
     }
   }
-};
+}; // show the gallery container and buttons
+
 
 var createGallery = function createGallery() {
   buttonsContainer.classList.add('hidden');
   gallery.classList.remove('hidden');
   galleryButtonsContainer.classList.remove('hidden');
-};
+}; // remove all the images in the current gallery and hide the gallery buttons
+
 
 var destroyGallery = function destroyGallery() {
   buttonsContainer.classList.remove('hidden');
   galleryButtonsContainer.classList.add('hidden');
   gallery.classList.add('hidden');
   gallery.innerHTML = '';
-};
+}; // get and display the images for a linked email address
+
 
 var getLinkedPhotos = function getLinkedPhotos(linkedEmail) {
   var emailstr = linkedEmail.innerText;
   var email = emailstr.split(" ")[0];
   var photos = savedEmails[email];
   destroyGallery();
-  createGallery();
+  createGallery(); // set image width to full width if only 1 image
 
   if (photos.length === 1) {
     img = new Image();
     img.src = photos[0].download_url;
     img.classList.add('w-full', 'flex-shrink', 'p-2', 'rounded-xl');
     gallery.appendChild(img);
-  }
+  } // set image width to 50% if there are 2 images
+
 
   if (photos.length === 2) {
     for (var i = 0; i < photos.length; i++) {
@@ -191,7 +195,8 @@ var getLinkedPhotos = function getLinkedPhotos(linkedEmail) {
       img.classList.add('w-full', 'md:w-1/2', 'flex-shrink', 'p-2', 'rounded-xl');
       gallery.appendChild(img);
     }
-  }
+  } // if there are more than 2 images set the width of the images to 33%
+
 
   if (photos.length > 2) {
     for (var _i = 0; _i < photos.length; _i++) {
@@ -218,13 +223,18 @@ photoForm.addEventListener("keyup", function (e) {
   if (e.keyCode === 13) {
     savePhotoFormBtn.click();
   }
-});
-linkedEmailList.addEventListener('click', function (e) {
-  if (document.querySelector('#loadedImg')) {
-    removeLastPhoto();
-  }
+}); // add event listener to each li in the side menu to link to the gallery for a linked email
 
-  getLinkedPhotos(e.target);
+linkedEmailList.addEventListener('click', function (e) {
+  // if the are no linked emails do not load the gallery, else call the getLinkedPhotos function which loads the gallery
+  if (e.target.innerHTML !== 'No Emails Saved yet!') {
+    // if there is a loaded image remove it from the DOM
+    if (document.querySelector('#loadedImg')) {
+      removeLastPhoto();
+    }
+
+    getLinkedPhotos(e.target);
+  }
 }); // load the first image on page load
 
 document.addEventListener('DOMContentLoaded', getPhoto); // single event listener on the document for all click events. e.target applies the event to the specified element.
@@ -245,7 +255,8 @@ document.addEventListener('click', function (e) {
     savePhotoForm.classList.add('hidden');
     errorMessageBox.innerHTML = '';
     errorMessageBox.classList.add('hidden');
-  }
+  } // close the gallery and get a new photo to link to an email
+
 
   if (e.target === GalleryNewImage) {
     destroyGallery();
