@@ -30,7 +30,11 @@ const imgEl = document.querySelector('#newImage'), // new image button
  successMessageBox = document.querySelector('#successMessageBox'),
  linkedEmailList = document.querySelector('#linkedEmailList'),
  photoForm = document.querySelector('#photoForm'),
- linkedEmail = document.querySelector('.linked-email')
+ buttonsContainer = document.querySelector('#buttonsContainer'),
+ galleryButtonsContainer = document.querySelector('#galleryButtonsContainer'),
+ GalleryNewImage = document.querySelector('#GalleryNewImage'),
+ gallery = document.querySelector('#gallery')
+
 
 // gets a list of images from a random page with a limit of 100 items per page
 const getPhoto = () => {
@@ -58,7 +62,7 @@ const displayImage = (image) => {
   }
   img.id = 'loadedImg'
   img.src = image.download_url
-  img.classList.add('h-128', 'rounded-xl', 'shadow-lg', 'm-auto')
+  img.classList.add('lg:h-128', 'rounded-xl', 'shadow-lg', 'm-auto')
   imageToDisplay = image
 }
 
@@ -104,8 +108,6 @@ const listEmails = () => {
 }
 
 
-
-
 // remove the old list and update with the current list of saved emails and append each one as a li to the ul in the
 // sidebar
 const updateEmailList = () => {
@@ -115,7 +117,7 @@ const updateEmailList = () => {
   for (let i = 0; i < newList.length; i++) {
     let li = document.createElement('li')
     li.classList.add('cursor-pointer', 'py-2',  'linked-email')
-    li.innerHTML = `${newList[i]}<span class="pr-2 text-center ml-2 bg-blue-400 rounded-full"> ${savedEmails[newList[i]].length}</span>`
+    li.innerHTML = `${newList[i]}<span class="pr-2 text-center ml-2 bg-blue-400 rounded-full pushy-link"> ${savedEmails[newList[i]].length}</span>`
     linkedEmailList.appendChild(li)
   }
 }
@@ -148,7 +150,48 @@ const saveEmail = (email) => {
   }
 }
 
-const getLinkedPhotos = () => {
+const createGallery= () => {
+  buttonsContainer.classList.add('hidden')
+  gallery.classList.remove('hidden')
+  galleryButtonsContainer.classList.remove('hidden')
+}
+
+const destroyGallery = () => {
+  buttonsContainer.classList.remove('hidden')
+  galleryButtonsContainer.classList.add('hidden')
+  gallery.classList.add('hidden')
+  gallery.innerHTML = ''
+}
+
+const getLinkedPhotos = (linkedEmail) => {
+  let emailstr = linkedEmail.innerText
+  let email = emailstr.split(" ")[0]
+  const photos = savedEmails[email]
+
+  destroyGallery()
+  createGallery()
+  if (photos.length === 1) {
+    img = new Image()
+    img.src = photos[0].download_url
+    img.classList.add('w-full', 'flex-shrink', 'p-2', 'rounded-xl')
+    gallery.appendChild(img)
+  }
+  if (photos.length === 2) {
+    for (let i = 0; i <photos.length ; i++) {
+      img = new Image()
+      img.src = photos[i].download_url
+      img.classList.add('w-full', 'md:w-1/2', 'flex-shrink', 'p-2', 'rounded-xl')
+      gallery.appendChild(img)
+    }
+  }
+  if (photos.length > 2) {
+    for (let i = 0; i <photos.length ; i++) {
+      img = new Image()
+      img.src = photos[i].download_url
+      img.classList.add('w-full', 'md:w-1/3', 'flex-shrink', 'p-2', 'rounded-xl')
+      gallery.appendChild(img)
+    }
+  }
 
 }
 
@@ -161,19 +204,24 @@ photoForm.addEventListener('submit', (e) =>{
 })
 
 // add listener to enter key to submit and save the photo
-
-
   photoForm.addEventListener("keyup", (e) => {
     e.preventDefault();
     if (e.keyCode === 13) {
       savePhotoFormBtn.click();
     }
   });
-
+linkedEmailList.addEventListener('click', (e) => {
+  if (document.querySelector('#loadedImg')) {
+    removeLastPhoto()
+  }
+  getLinkedPhotos(e.target)
+})
 // load the first image on page load
 document.addEventListener('DOMContentLoaded', getPhoto)
+
 // single event listener on the document for all click events. e.target applies the event to the specified element.
 document.addEventListener('click', (e) => {
+  
   // if new image button clicked get new image and remove the old image
   if (e.target === imgEl) {
     cleanUp()
@@ -187,6 +235,11 @@ document.addEventListener('click', (e) => {
     savePhotoForm.classList.add('hidden')
     errorMessageBox.innerHTML = ''
     errorMessageBox.classList.add('hidden')
+  }
+  
+  if (e.target === GalleryNewImage) {
+    destroyGallery()
+    getPhoto()
   }
   
   if (e.target === savePhotoFormBtn) {
