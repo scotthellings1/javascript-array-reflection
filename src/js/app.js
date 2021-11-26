@@ -25,6 +25,7 @@ const imgEl = document.querySelector('#newImage'), // new image button
  cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto'),
  savePhotoForm = document.querySelector('#savePhotoForm'),
  savePhotoFormBtn = document.querySelector('#savePhoto'),
+ savePhotoFormBtnConfirm = document.querySelector('#savePhotoconfirm'),
  emailInput = document.querySelector('#email'),
  errorMessageBox = document.querySelector('#errorMessageBox'),
  successMessageBox = document.querySelector('#successMessageBox'),
@@ -91,6 +92,8 @@ const removeLastPhoto = () => {
 const cleanUp = () => {
   removeLastPhoto()
   getPhoto()
+  savePhotoFormBtnConfirm.classList.add('hidden')
+  savePhotoFormBtn.classList.remove('hidden')
   let elements = [errorMessageBox, successMessageBox]
   elements.forEach(element => {
     element.innerHTML = ''
@@ -257,6 +260,8 @@ document.addEventListener('click', (e) => {
       errorMessageBox.innerHTML = 'Please enter a valid Email'
       errorMessageBox.classList.remove('hidden')
     } else {
+      savePhotoFormBtnConfirm.classList.remove('hidden')
+      savePhotoFormBtn.classList.add('hidden')
       errorMessageBox.classList.add('hidden')
       successMessageBox.innerHTML = 'Photo Saved!'
       successMessageBox.classList.remove('hidden')

@@ -29,6 +29,7 @@ authorEl = document.querySelector('#author'),
     cancelSavePhotoBtn = document.querySelector('#cancelSavePhoto'),
     savePhotoForm = document.querySelector('#savePhotoForm'),
     savePhotoFormBtn = document.querySelector('#savePhoto'),
+    savePhotoFormBtnConfirm = document.querySelector('#savePhotoconfirm'),
     emailInput = document.querySelector('#email'),
     errorMessageBox = document.querySelector('#errorMessageBox'),
     successMessageBox = document.querySelector('#successMessageBox'),
@@ -94,6 +95,8 @@ var removeLastPhoto = function removeLastPhoto() {
 var cleanUp = function cleanUp() {
   removeLastPhoto();
   getPhoto();
+  savePhotoFormBtnConfirm.classList.add('hidden');
+  savePhotoFormBtn.classList.remove('hidden');
   var elements = [errorMessageBox, successMessageBox];
   elements.forEach(function (element) {
     element.innerHTML = '';
@@ -270,6 +273,8 @@ document.addEventListener('click', function (e) {
       errorMessageBox.innerHTML = 'Please enter a valid Email';
       errorMessageBox.classList.remove('hidden');
     } else {
+      savePhotoFormBtnConfirm.classList.remove('hidden');
+      savePhotoFormBtn.classList.add('hidden');
       errorMessageBox.classList.add('hidden');
       successMessageBox.innerHTML = 'Photo Saved!';
       successMessageBox.classList.remove('hidden');
